@@ -1,6 +1,7 @@
 const container = document.getElementById('container');
 const resetButton = document.getElementById('reset-button');
 const gridSizeButton = document.getElementById('grid-size');
+const grayMode = document.getElementById('gray-mode');
 
 let columns = 16;
 
@@ -12,6 +13,7 @@ function createGrid(numColumns) {
     let squareId = container.childElementCount;
 
     let squareSize = (1 / numColumns) * 100;
+    let alpha = 0;
     console.log(squareSize);
 
     square.setAttribute('id', squareId + 1);
@@ -21,23 +23,51 @@ function createGrid(numColumns) {
     square.classList.add('square');
     container.appendChild(square);
 
-    square.addEventListener('mouseover', (e) => {
-      e.target.classList.add('square-hover');
+    square.addEventListener('mouseover', () => {
+      if (alpha < 1) {
+        alpha += 0.1;
+      }
+      square.style.backgroundColor = `rgba(73, 73, 73, ${alpha})`;
     });
   }
 }
 
 createGrid(columns);
 
-gridSizeButton.addEventListener('click', () => {
-  let userColumns = Number(prompt('Chose a number of columns! (Maximum 100)'));
+function randomNumber(max) {
+  return Math.floor(Math.random() * max);
+}
 
-  if (isNaN(userColumns) || !userColumns) {
+const colorMode = document.getElementById('color-mode');
+
+colorMode.addEventListener('click', () => {
+  const squares = document.querySelectorAll('.square');
+
+  resetSketchPad();
+  squares.forEach((square) => {
+    let red = randomNumber(255);
+    let green = randomNumber(255);
+    let blue = randomNumber(255);
+    let alpha = 0;
+
+    square.addEventListener('mouseover', () => {
+      if (alpha < 1) {
+        alpha += 0.1;
+      }
+      square.style.backgroundColor = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+    });
+  });
+});
+
+gridSizeButton.addEventListener('click', () => {
+  columns = Number(prompt('Chose a number of columns! (Maximum 100)'));
+
+  if (isNaN(columns) || !columns) {
     alert('Not a valid number. Try again!');
     return;
   }
 
-  if (userColumns >= 101) {
+  if (columns >= 101) {
     alert(`That's too high.\n Enter a number less than or equal to 100.  `);
     return;
   }
@@ -46,17 +76,25 @@ gridSizeButton.addEventListener('click', () => {
     container.removeChild(container.firstChild);
   }
 
-  createGrid(userColumns);
+  createGrid(columns);
 });
+
+container.addEventListener('dblclick', resetSketchPad);
 
 function resetSketchPad() {
   const squares = document.querySelectorAll('.square');
+
   for (let square of squares) {
-    square.classList.remove('square-hover');
+    square.style.backgroundColor = `rgba(0, 0, 0, 0`;
   }
 }
 
 resetButton.addEventListener('click', () => {
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
+  }
+  createGrid(columns);
+
   container.classList.add('tilt-shaking');
   resetSketchPad();
 
@@ -64,3 +102,22 @@ resetButton.addEventListener('click', () => {
     container.classList.remove('tilt-shaking');
   });
 });
+
+/* grayMode.addEventListener('click', () => {
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
+  }
+  createGrid(columns);
+
+  const squares = document.querySelectorAll('.square');
+
+  for (let square in squares) {
+    square.addEventListener('mouseover', () => {
+      let alpha = 0;
+      if (alpha < 1) {
+        alpha += 0.1;
+      }
+      square.style.backgroundColor = `rgba(73, 73, 73, ${alpha})`;
+    });
+  }
+}); */
