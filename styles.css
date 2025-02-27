@@ -9,19 +9,18 @@ section {
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  padding-top: 200px;
 }
 
 #container {
   display: flex;
   flex-wrap: wrap;
-  height: 50%;
-  width: 50%;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  height: 500px;
+  width: 500px;
   color: white;
-  border: 2px solid red;
+  border: 50px solid red;
   margin: 10px;
+  border-radius: 15px;
 }
 
 #container.tilt-shaking {
@@ -31,9 +30,8 @@ section {
 
 .square {
   background-color: rgb(220, 220, 220);
-  flex-basis: 6.25%;
-  text-align: center;
-  aspect-ratio: 1/1;
+  flex-grow: 1;
+  flex-basis: calc(100% / 16); /* Based on your initial column count */
   transition: background-color 0.2s ease-in-out;
 }
 
